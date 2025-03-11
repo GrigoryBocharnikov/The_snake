@@ -1,7 +1,6 @@
 import pygame
 import pytest
 
-<<<<<<< HEAD
 class Position:
     EXPECTED_GAME_OBJECT_ATTRS = (
         ('атрибут', 'position'),
@@ -20,26 +19,6 @@ class Position:
             f'Убедитесь, что у объектов класса `GameObject` определен '
             f'{attr_type} `{attr_name}`.'
         )
-=======
-
-EXPECTED_GAME_OBJECT_ATTRS = (
-    ('атрибут', 'position'),
-    ('атрибут', 'body_color'),
-    ('метод', 'draw'),
-)
-
-
-@pytest.mark.parametrize(
-    'attr_type, attr_name',
-    EXPECTED_GAME_OBJECT_ATTRS,
-    ids=[elem[1] for elem in EXPECTED_GAME_OBJECT_ATTRS]
-)
-def test_game_object_attributes(game_object, attr_type, attr_name):
-    assert hasattr(game_object, attr_name), (
-        f'Убедитесь, что у объектов класса `GameObject` определен {attr_type} '
-        f'`{attr_name}`.'
-    )
->>>>>>> 8f2176fc763169cb88d652888c2ea91912bd3084
 
 
 EXPECTED_APPLE_ATTRS = (
@@ -49,19 +28,11 @@ EXPECTED_APPLE_ATTRS = (
     ('метод', 'randomize_position'),
 )
 
-<<<<<<< HEAD
-=======
-
->>>>>>> 8f2176fc763169cb88d652888c2ea91912bd3084
 def test_apple_inherits_from_game_object(_the_snake):
     assert issubclass(_the_snake.Apple, _the_snake.GameObject), (
         'Класс `Apple` должен наследоваться от класса `GameObject`.'
     )
 
-<<<<<<< HEAD
-=======
-
->>>>>>> 8f2176fc763169cb88d652888c2ea91912bd3084
 @pytest.mark.parametrize(
     'attr_type, attr_name',
     EXPECTED_APPLE_ATTRS,
@@ -69,18 +40,10 @@ def test_apple_inherits_from_game_object(_the_snake):
 )
 def test_apple_attributes(apple, attr_type, attr_name):
     assert hasattr(apple, attr_name), (
-<<<<<<< HEAD
         f'Убедитесь, что у объектов класса `Apple` определен '
         f'{attr_type} `{attr_name}`.'
     )
 
-=======
-        f'Убедитесь, что у объектов класса `Apple` определен {attr_type} '
-        f'`{attr_name}`.'
-    )
-
-
->>>>>>> 8f2176fc763169cb88d652888c2ea91912bd3084
 EXPECTED_SNAKE_ATTRS = (
     ('атрибут', 'position'),
     ('атрибут', 'body_color'),
@@ -93,19 +56,11 @@ EXPECTED_SNAKE_ATTRS = (
     ('метод', 'update_direction'),
 )
 
-<<<<<<< HEAD
-=======
-
->>>>>>> 8f2176fc763169cb88d652888c2ea91912bd3084
 def test_snake_inherits_from_game_object(_the_snake):
     assert issubclass(_the_snake.Snake, _the_snake.GameObject), (
         'Класс `Snake` должен наследоваться от класса `GameObject`.'
     )
 
-<<<<<<< HEAD
-=======
-
->>>>>>> 8f2176fc763169cb88d652888c2ea91912bd3084
 @pytest.mark.parametrize(
     'attr_type, attr_name',
     EXPECTED_SNAKE_ATTRS,
@@ -113,18 +68,10 @@ def test_snake_inherits_from_game_object(_the_snake):
 )
 def test_snake_attributes(snake, attr_type, attr_name):
     assert hasattr(snake, attr_name), (
-<<<<<<< HEAD
         f'Убедитесь, что у объектов класса `Snake` определен '
         f'{attr_type} `{attr_name}`.'
     )
 
-=======
-        f'Убедитесь, что у объектов класса `Snake` определен {attr_type} '
-        f'`{attr_name}`.'
-    )
-
-
->>>>>>> 8f2176fc763169cb88d652888c2ea91912bd3084
 EXPECTED_MODULE_ELEMENTS = (
     ('константа', 'SCREEN_WIDTH'),
     ('константа', 'SCREEN_HEIGHT'),
@@ -142,10 +89,6 @@ EXPECTED_MODULE_ELEMENTS = (
     ('функция', 'handle_keys'),
 )
 
-<<<<<<< HEAD
-=======
-
->>>>>>> 8f2176fc763169cb88d652888c2ea91912bd3084
 @pytest.mark.parametrize(
     'element_type, element_name',
     EXPECTED_MODULE_ELEMENTS,
@@ -153,18 +96,10 @@ EXPECTED_MODULE_ELEMENTS = (
 )
 def test_elements_exist(element_type, element_name, _the_snake):
     assert hasattr(_the_snake, element_name), (
-<<<<<<< HEAD
         f'Убедитесь, что в модуле `the_snake` определена '
         f'{element_type} `{element_name}`.'
     )
 
-=======
-        f'Убедитесь, что в модуле `the_snake` определена {element_type} '
-        f'`{element_name}`.'
-    )
-
-
->>>>>>> 8f2176fc763169cb88d652888c2ea91912bd3084
 @pytest.mark.parametrize(
     'expected_type, var_name',
     (
@@ -174,18 +109,10 @@ def test_elements_exist(element_type, element_name, _the_snake):
 )
 def test_vars_type(expected_type, var_name, _the_snake):
     assert isinstance(getattr(_the_snake, var_name, None), expected_type), (
-<<<<<<< HEAD
         f'Убедитесь, что в модуле `the_snake` есть переменная '
         f'`{var_name}` типа `{expected_type.__name__}`.'
     )
 
-=======
-        'Убедитесь, что в модуле `the_snake` есть переменная '
-        f'`{var_name}` типа `{expected_type.__name__}`.'
-    )
-
-
->>>>>>> 8f2176fc763169cb88d652888c2ea91912bd3084
 @pytest.mark.parametrize(
     'func_name',
     ('handle_keys', 'main'),
