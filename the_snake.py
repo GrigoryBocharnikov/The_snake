@@ -81,7 +81,10 @@ class Snake:
         """Отрисовать змейку на экране."""
         for position in self.positions[:-1]:
             rect = pygame.Rect(
-                position[0] * GRID_SIZE, position[1] * GRID_SIZE, GRID_SIZE, GRID_SIZE
+                position[0] * GRID_SIZE,
+                position[1] * GRID_SIZE,
+                GRID_SIZE,
+                GRID_SIZE
             )
             pygame.draw.rect(screen, self.body_color, rect)
             pygame.draw.rect(screen, BORDER_COLOR, rect, 1)
@@ -99,7 +102,10 @@ class Snake:
         # Затирание последнего сегмента.
         if self.last:
             last_rect = pygame.Rect(
-                self.last[0] * GRID_SIZE, self.last[1] * GRID_SIZE, GRID_SIZE, GRID_SIZE
+                self.last[0] * GRID_SIZE,
+                self.last[1] * GRID_SIZE,
+                GRID_SIZE,
+                GRID_SIZE
             )
             pygame.draw.rect(screen, BOARD_BACKGROUND_COLOR, last_rect)
 
