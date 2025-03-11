@@ -182,7 +182,7 @@ def main():
     # Инициализация PyGame:
     pygame.init()
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), 0, 32)
-    pygame.display.set_caption("Змейка")
+    pygame.display.set_caption('Змейка')
     clock = pygame.time.Clock()
 
     # Создаем экземпляры классов.
@@ -196,7 +196,7 @@ def main():
         handle_keys(snake)
 
         if snake.update():  # Проверяем на столкновение с самим собой.
-            print("Игра окончена! Змея столкнулась сама с собой.")
+            print('Игра окончена! Змея столкнулась сама с собой.')
             break
 
         # Проверка на столкновение со яблоком
@@ -216,7 +216,7 @@ def main():
 
         # Проверка на столкновение с камнями
         if snake.positions[0] in [stone.position for stone in stones]:
-            print("Игра окончена! Змея столкнулась с камнем.")
+            print('Игра окончена! Змея столкнулась с камнем.')
             break
 
         # Отрисовка
@@ -230,5 +230,5 @@ def main():
     pygame.quit()  # Завершение игры
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()
