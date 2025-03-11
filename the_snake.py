@@ -196,8 +196,8 @@ def main():
         handle_keys(snake)
 
         if snake.update():  # Проверяем на столкновение с самим собой.
-            print(f'Игра окончена! Змея столкнулась сама с собой.')
-            break
+            print('Игра окончена! Змея столкнулась сама с собой.')
+
 
         # Проверка на столкновение со яблоком
         if snake.positions[0] == apple.position:
@@ -217,7 +217,7 @@ def main():
         # Проверка на столкновение с камнями
         if snake.positions[0] in [stone.position for stone in stones]:
             print (f"Игра окончена! Змея столкнулась с камнем.")
-            break
+
 
         # Отрисовка
         screen.fill(BOARD_BACKGROUND_COLOR)
