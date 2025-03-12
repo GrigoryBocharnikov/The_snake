@@ -1,10 +1,10 @@
-import os
 import sys
 from random import randint
 
 import pygame
 
-
+pygame.init()
+clock = pygame.time.Clock()
 # Константы для размеров поля и сетки:
 SCREEN_WIDTH, SCREEN_HEIGHT = 640, 480
 GRID_SIZE = 20

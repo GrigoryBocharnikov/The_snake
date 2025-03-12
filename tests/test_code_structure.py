@@ -1,6 +1,10 @@
 import pygame
 import pytest
+import pygame
 
+# В вашем коде
+pygame.init()
+clock = pygame.time.Clock()
 class Position:
     """randomize_position"""
     EXPECTED_GAME_OBJECT_ATTRS = (
