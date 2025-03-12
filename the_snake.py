@@ -1,9 +1,11 @@
-from random import randint
-import pygame
+import os
 import sys
+from random import randint
 
-pygame.init()
-"""Константы для размеров поля и сетки."""
+import pygame
+
+
+# Константы для размеров поля и сетки:
 SCREEN_WIDTH, SCREEN_HEIGHT = 640, 480
 GRID_SIZE = 20
 GRID_WIDTH = SCREEN_WIDTH // GRID_SIZE
@@ -23,7 +25,20 @@ SNAKE_COLOR = (0, 255, 0)
 STONE_COLOR = (128, 128, 128)  # Цвет камня.
 
 # Скорость движения змейки:
+
 SPEED = 5
+
+class GameObject:
+    """Базовый класс для игровых объектов."""
+
+    def __init__(self, position=(0, 0), body_color=(255, 255, 255)):
+        self.position = position
+        self.body_color = body_color
+
+    def draw(self, screen):
+        """Метод для отрисовки объекта на экране."""
+        pass  # Реализуйте в дочерних классах
+
 
 def random_position(excluded_positions):
     while True:
@@ -31,7 +46,8 @@ def random_position(excluded_positions):
         if position not in excluded_positions:
             return position
 
-class Snake:
+
+class Snake(GameObject):
     def __init__(self):
         self.positions = [(GRID_WIDTH // 2, GRID_HEIGHT // 2)]
         self.direction = RIGHT
@@ -72,21 +88,37 @@ class Snake:
 
     def draw(self, screen):
         for position in self.positions[:-1]:
-            rect = pygame.Rect(position[0] * GRID_SIZE, position[1] * GRID_SIZE, GRID_SIZE, GRID_SIZE)
+            rect = pygame.Rect(
+                position[0] * GRID_SIZE,
+                position[1] * GRID_SIZE,
+                GRID_SIZE,
+                GRID_SIZE
+            )
             pygame.draw.rect(screen, self.body_color, rect)
             pygame.draw.rect(screen, BORDER_COLOR, rect, 1)
 
         # Отрисовка головы.
-        head_rect = pygame.Rect(self.positions[0][0] * GRID_SIZE, self.positions[0][1] * GRID_SIZE, GRID_SIZE, GRID_SIZE)
+        head_rect = pygame.Rect(
+            self.positions[0][0] * GRID_SIZE,
+            self.positions[0][1] * GRID_SIZE,
+            GRID_SIZE,
+            GRID_SIZE,
+        )
         pygame.draw.rect(screen, self.body_color, head_rect)
         pygame.draw.rect(screen, BORDER_COLOR, head_rect, 1)
 
         # Затирание последнего сегмента.
         if self.last:
-            last_rect = pygame.Rect(self.last[0] * GRID_SIZE, self.last[1] * GRID_SIZE, GRID_SIZE, GRID_SIZE)
+            last_rect = pygame.Rect(
+                self.last[0] * GRID_SIZE,
+                self.last[1] * GRID_SIZE,
+                GRID_SIZE,
+                GRID_SIZE
+            )
             pygame.draw.rect(screen, BOARD_BACKGROUND_COLOR, last_rect)
 
-class Apple:
+
+class Apple(GameObject):
     def __init__(self):
         self.position = None
         self.body_color = APPLE_COLOR
@@ -95,9 +127,15 @@ class Apple:
         self.position = random_position(excluded_positions)
 
     def draw(self, screen):
-        rect = pygame.Rect(self.position[0] * GRID_SIZE, self.position[1] * GRID_SIZE, GRID_SIZE, GRID_SIZE)
+        rect = pygame.Rect(
+            self.position[0] * GRID_SIZE,
+            self.position[1] * GRID_SIZE,
+            GRID_SIZE,
+            GRID_SIZE,
+        )
         pygame.draw.rect(screen, self.body_color, rect)
         pygame.draw.rect(screen, BORDER_COLOR, rect, 1)
+
 
 class Stone:
     def __init__(self, position):
@@ -109,9 +147,15 @@ class Stone:
         return random_position(excluded_positions)
 
     def draw(self, screen):
-        rect = pygame.Rect(self.position[0] * GRID_SIZE, self.position[1] * GRID_SIZE, GRID_SIZE, GRID_SIZE)
+        rect = pygame.Rect(
+            self.position[0] * GRID_SIZE,
+            self.position[1] * GRID_SIZE,
+            GRID_SIZE,
+            GRID_SIZE,
+        )
         pygame.draw.rect(screen, self.body_color, rect)
         pygame.draw.rect(screen, BORDER_COLOR, rect, 1)
+
 
 def handle_keys(game_object):
     for event in pygame.event.get():
@@ -119,7 +163,7 @@ def handle_keys(game_object):
             pygame.quit()
             sys.exit()  # Завершение игры.
         elif event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_ESCAPE:  # Проверка на нажатие клавивиши Esc.
+            if event.key == pygame.K_ESCAPE:
                 pygame.quit()
                 sys.exit()
             if event.key == pygame.K_UP and game_object.direction != DOWN:
@@ -131,18 +175,19 @@ def handle_keys(game_object):
             elif event.key == pygame.K_RIGHT and game_object.direction != LEFT:
                 game_object.next_direction = RIGHT
 
+
 def main():
     # Инициализация PyGame:
     pygame.init()
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), 0, 32)
-    pygame.display.set_caption('Змейка')
+    pygame.display.set_caption("Змейка")
     clock = pygame.time.Clock()
 
     # Создаем экземпляры классов.
     snake = Snake()
     apple = Apple()
     apple.random_position(snake.positions)  # Генерируем позицию яблока.
-    stones =[]
+    stones = []
 
     while True:
         clock.tick(SPEED)
@@ -155,11 +200,17 @@ def main():
         # Проверка на столкновение со яблоком
         if snake.positions[0] == apple.position:
             snake.grow()
-            apple.random_position(snake.positions + [stone.position for stone in stones])  # Генерируем новое яблоко
+            apple.random_position(
+                snake.positions + [stone.position for stone in stones]
+            )  # Генерируем новое яблоко
 
             # Добавляем проверку на появление камней
             if snake.apple_count % 5 == 0:  # Каждые 5 съеденных яблок
-                new_stone_position = Stone.random_position(snake.positions + [apple.position] + [stone.position for stone in stones])
+                new_stone_position = Stone.random_position(
+                    snake.positions
+                    + [apple.position]
+                    + [stone.position for stone in stones]
+                )
                 stones.append(Stone(new_stone_position))
 
         # Проверка на столкновение с камнями
@@ -177,5 +228,6 @@ def main():
 
     pygame.quit()  # Завершение игры
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     main()

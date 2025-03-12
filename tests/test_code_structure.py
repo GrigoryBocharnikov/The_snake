@@ -2,6 +2,7 @@ import pygame
 import pytest
 
 class Position:
+    """randomize_position"""
     EXPECTED_GAME_OBJECT_ATTRS = (
         ('атрибут', 'position'),
         ('атрибут', 'body_color'),
