@@ -47,13 +47,13 @@ class GameObject:
         self.position = position
         self.body_color = body_color
 
-
     def draw(self, screen):
         """Метод для отрисовки объекта на экране."""
         pass  # Реализуйте в дочерних классах
 
 def random_position(excluded_positions):
     """Генератор яблок."""
+
     while True:
         position = (randint(0, GRID_WIDTH - 1), randint(0, GRID_HEIGHT - 1))
         if position not in excluded_positions:
@@ -235,7 +235,8 @@ def handle_keys(game_object):
 
 
 def main():
-    # Инициализация PyGame:
+    """Инициализация PyGame."""
+
     pygame.init()
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), 0, 32)
     pygame.display.set_caption('Змейка')
@@ -252,7 +253,6 @@ def main():
         handle_keys(snake)
 
         if snake.update():  # Проверяем на столкновение с самим собой.
-            print('Игра окончена! Змея столкнулась сама с собой.')
             break
 
         # Проверка на столкновение со яблоком
