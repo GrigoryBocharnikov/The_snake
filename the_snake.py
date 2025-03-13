@@ -1,5 +1,6 @@
 import sys
 from random import randint
+
 import pygame
 
 # Константы для размеров поля и сетки:
@@ -192,6 +193,7 @@ class Apple(GameObject):
 
     def draw(self, screen):
         """Метод для отрисовки объекта на экране."""
+
         rect = pygame.Rect(
             self.position[0] * GRID_SIZE,
             self.position[1] * GRID_SIZE,
