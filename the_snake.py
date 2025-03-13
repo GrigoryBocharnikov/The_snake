@@ -1,6 +1,5 @@
 import sys
 from random import randint
-
 import pygame
 
 # Константы для размеров поля и сетки:
@@ -25,7 +24,6 @@ SNAKE_COLOR = (0, 255, 0)
 STONE_COLOR = (128, 128, 128)  # Цвет камня.
 
 # Скорость движения змейки:
-
 SPEED = 5
 
 
@@ -51,9 +49,16 @@ class GameObject:
         """Метод для отрисовки объекта на экране."""
         pass  # Реализуйте в дочерних классах
 
-def random_position(excluded_positions):
-    """Генератор яблок."""
 
+def random_position(excluded_positions):
+    """Генератор случайной позиции для объекта.
+
+    Args:
+        excluded_positions (list): Список позиций, которые следует избегать.
+
+    Returns:
+        tuple: Случайная позиция, не входящая в excluded_positions.
+    """
     while True:
         position = (randint(0, GRID_WIDTH - 1), randint(0, GRID_HEIGHT - 1))
         if position not in excluded_positions:
@@ -76,7 +81,6 @@ class Snake(GameObject):
         self.direction = RIGHT
         self.next_direction = None
         self.last = None
-        self.body_color = SNAKE_COLOR
         self.apple_count = 0  # Счётчик съеденных яблок.
 
     def update(self) -> bool:
@@ -147,21 +151,21 @@ class Snake(GameObject):
             )
             pygame.draw.rect(screen, BOARD_BACKGROUND_COLOR, last_rect)
 
-        def get_head_position(self) -> tuple:
-            """Возвращает позицию головы змеи.
+    def get_head_position(self) -> tuple:
+        """Возвращает позицию головы змеи.
 
-            Returns:
-                tuple: Позиция головы.
-            """
-            return self.positions[0]
+        Returns:
+            tuple: Позиция головы.
+        """
+        return self.positions[0]
 
-        def move(self):
-            """Логика движения змеи (пока не реализована)."""
-            pass
+    def move(self):
+        """Логика движения змеи (пока не реализована)."""
+        pass
 
-        def reset(self):
-            """Сбрасывает состояние змеи (пока не реализовано)."""
-            pass
+    def reset(self):
+        """Сбрасывает состояние змеи (пока не реализовано)."""
+        pass
 
 
 class Apple(GameObject):
@@ -173,7 +177,11 @@ class Apple(GameObject):
         self.randomize_position()  # Сразу рандомизируем позицию при создании
 
     def randomize_position(self, excluded_positions=None):
-        """Проверка позиции."""
+        """Проверка позиции.
+
+        Args:
+            excluded_positions (list): Список позиций, которые следует избегать.
+        """
         if excluded_positions is None:
             excluded_positions = []
         self.position = random_position(excluded_positions)
@@ -194,16 +202,27 @@ class Stone(GameObject):
     """Механизм отрисовки и стирания Stone."""
 
     def __init__(self, position):
-        self.position = position
-        self.body_color = STONE_COLOR
+        """Инициализирует объект Stone.
+
+        Args:
+            position (tuple): Позиция камня на игровом поле.
+        """
+        super().__init__(position=position, body_color=STONE_COLOR)
 
     @staticmethod
     def random_position(excluded_positions):
-        """Проверка позиции на наличие других обьектов."""
+        """Проверка позиции на наличие других объектов.
+
+        Args:
+            excluded_positions (list): Список позиций, которые следует избегать.
+
+        Returns:
+            tuple: Случайная позиция, не входящая в excluded_positions.
+        """
         return random_position(excluded_positions)
 
     def draw(self, screen):
-        """Метод для отрисовки обьекта на экране."""
+        """Метод для отрисовки объекта на экране."""
         rect = pygame.Rect(
             self.position[0] * GRID_SIZE,
             self.position[1] * GRID_SIZE,
@@ -215,7 +234,11 @@ class Stone(GameObject):
 
 
 def handle_keys(game_object):
-    """Основные механизмы игры и змейки"""
+    """Основные механизмы игры и змейки.
+
+    Args:
+        game_object (GameObject): Объект игры для обработки управления.
+    """
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
@@ -236,57 +259,4 @@ def handle_keys(game_object):
 
 def main():
     """Инициализация PyGame."""
-
-    pygame.init()
-    screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), 0, 32)
-    pygame.display.set_caption('Змейка')
-    clock = pygame.time.Clock()
-
-    # Создаем экземпляры классов.
-    snake = Snake()
-    apple = Apple()
-    apple.randomize_position(snake.positions)  # Генерируем позицию яблока.
-    stones = []
-
-    while True:
-        clock.tick(SPEED)
-        handle_keys(snake)
-
-        if snake.update():  # Проверяем на столкновение с самим собой.
-            break
-
-        # Проверка на столкновение со яблоком
-        if snake.positions[0] == apple.position:
-            snake.grow()
-            apple.randomize_position(
-                snake.positions + [stone.position for stone in stones]
-            )  # Генерируем новое яблоко
-
-            # Добавляем проверку на появление камней
-            if snake.apple_count % 5 == 0:  # Каждые 5 съеденных яблок
-                new_stone_position = Stone.random_position(
-                    snake.positions
-                    + [apple.position]
-                    + [stone.position for stone in stones]
-                )
-                stones.append(Stone(new_stone_position))
-
-        # Проверка на столкновение с камнями
-        if snake.positions[0] in [stone.position for stone in stones]:
-            print('Игра окончена! Змея столкнулась с камнем.')
-            break
-
-        # Отрисовка
-        screen.fill(BOARD_BACKGROUND_COLOR)
-        apple.draw(screen)
-        for stone in stones:
-            stone.draw(screen)  # Отрисовка камней
-        snake.draw(screen)
-        pygame.display.flip()
-
-    pygame.quit()  # Завершение игры
-
-
-if __name__ == '__main__':
-    main()
-    sys.exit()
+    pygame
