@@ -166,6 +166,10 @@ class Snake(GameObject):
     def reset(self):
         """Сбрасывает состояние змеи (пока не реализовано)."""
         pass
+    def update_direction(self, new_direction):
+        """Обновляет направление змеи, если новое направление не противоположно текущему."""
+        if (new_direction[0] * -1, new_direction[1] * -1) != self.direction:
+            self.next_direction = new_direction
 
 
 class Apple(GameObject):
@@ -212,10 +216,8 @@ class Stone(GameObject):
     @staticmethod
     def random_position(excluded_positions):
         """Проверка позиции на наличие других объектов.
-
         Args:
             excluded_positions (list): Список позиций, которые следует избегать.
-
         Returns:
             tuple: Случайная позиция, не входящая в excluded_positions.
         """
