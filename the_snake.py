@@ -35,7 +35,8 @@ class GameObject:
     Attributes:
         position (tuple): Позиция объекта на игровом поле.
         body_color (tuple): Цвет тела объекта.
-        """
+    """
+
     def __init__(self, position=(0, 0), body_color=(255, 255, 255)):
         """Инициализирует объект GameObject.
 
@@ -50,7 +51,6 @@ class GameObject:
     def draw(self, screen):
         """Метод для отрисовки объекта на экране."""
         pass  # Реализуйте в дочерних классах
-
 
 def random_position(excluded_positions):
     """Генератор яблок."""
@@ -67,7 +67,7 @@ class Snake(GameObject):
         positions (list): Список позиций сегментов змеи.
         direction (tuple): Текущее направление движения.
         next_direction (tuple): Направление, в которое змейка должна двигаться.
-     """
+    """
 
     def __init__(self):
         """Инициализирует объект Snake."""
@@ -192,6 +192,7 @@ class Apple(GameObject):
 
 class Stone(GameObject):
     """Механизм отрисовки и стирания Stone."""
+
     def __init__(self, position):
         self.position = position
         self.body_color = STONE_COLOR
@@ -237,7 +238,7 @@ def main():
     # Инициализация PyGame:
     pygame.init()
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), 0, 32)
-    pygame.display.set_caption("Змейка")
+    pygame.display.set_caption('Змейка')
     clock = pygame.time.Clock()
 
     # Создаем экземпляры классов.
@@ -251,7 +252,7 @@ def main():
         handle_keys(snake)
 
         if snake.update():  # Проверяем на столкновение с самим собой.
-            print("Игра окончена! Змея столкнулась сама с собой.")
+            print('Игра окончена! Змея столкнулась сама с собой.')
             break
 
         # Проверка на столкновение со яблоком
@@ -272,7 +273,7 @@ def main():
 
         # Проверка на столкновение с камнями
         if snake.positions[0] in [stone.position for stone in stones]:
-            print("Игра окончена! Змея столкнулась с камнем.")
+            print('Игра окончена! Змея столкнулась с камнем.')
             break
 
         # Отрисовка
@@ -286,6 +287,6 @@ def main():
     pygame.quit()  # Завершение игры
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()
     sys.exit()
