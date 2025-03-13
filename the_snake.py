@@ -3,13 +3,13 @@ from random import randint
 
 import pygame
 
-pygame.init()
-clock = pygame.time.Clock()
 # Константы для размеров поля и сетки:
 SCREEN_WIDTH, SCREEN_HEIGHT = 640, 480
 GRID_SIZE = 20
 GRID_WIDTH = SCREEN_WIDTH // GRID_SIZE
 GRID_HEIGHT = SCREEN_HEIGHT // GRID_SIZE
+screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+clock = pygame.time.Clock
 
 """Направления движения."""
 UP = (0, -1)
@@ -27,6 +27,7 @@ STONE_COLOR = (128, 128, 128)  # Цвет камня.
 # Скорость движения змейки:
 
 SPEED = 5
+
 
 class GameObject:
     """Базовый класс для игровых объектов."""
@@ -117,13 +118,24 @@ class Snake(GameObject):
             )
             pygame.draw.rect(screen, BOARD_BACKGROUND_COLOR, last_rect)
 
+        def get_head_position(self):
+            return self.positions[0]
+
+        def move(self):
+            pass
+
+        def reset(self):
+            pass
+
 
 class Apple(GameObject):
     def __init__(self):
-        self.position = None
-        self.body_color = APPLE_COLOR
+        super().__init__()  # Вызов конструктора родительского класса
+        self.randomize_position()  # Сразу рандомизируем позицию при создании
 
-    def random_position(self, excluded_positions):
+    def randomize_position(self, excluded_positions=None):
+        if excluded_positions is None:
+            excluded_positions = []
         self.position = random_position(excluded_positions)
 
     def draw(self, screen):
@@ -134,10 +146,10 @@ class Apple(GameObject):
             GRID_SIZE,
         )
         pygame.draw.rect(screen, self.body_color, rect)
-        pygame.draw.rect(screen, BORDER_COLOR, rect, 1)
+        pygame.draw.rect(screen, APPLE_COLOR, rect, 20)
 
 
-class Stone:
+class Stone(GameObject):
     def __init__(self, position):
         self.position = position
         self.body_color = STONE_COLOR
@@ -186,7 +198,7 @@ def main():
     # Создаем экземпляры классов.
     snake = Snake()
     apple = Apple()
-    apple.random_position(snake.positions)  # Генерируем позицию яблока.
+    apple.randomize_position(snake.positions)  # Генерируем позицию яблока.
     stones = []
 
     while True:
@@ -200,7 +212,7 @@ def main():
         # Проверка на столкновение со яблоком
         if snake.positions[0] == apple.position:
             snake.grow()
-            apple.random_position(
+            apple.randomize_position(
                 snake.positions + [stone.position for stone in stones]
             )  # Генерируем новое яблоко
 

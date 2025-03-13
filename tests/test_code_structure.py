@@ -1,6 +1,8 @@
 import pygame
 import pytest
 import pygame
+import the_snake
+
 
 # В вашем коде
 pygame.init()
@@ -32,11 +34,11 @@ EXPECTED_APPLE_ATTRS = (
     ('метод', 'draw'),
     ('метод', 'randomize_position'),
 )
-
-def test_apple_inherits_from_game_object(_the_snake):
-    assert issubclass(_the_snake.Apple, _the_snake.GameObject), (
-        'Класс `Apple` должен наследоваться от класса `GameObject`.'
-    )
+class Apple:
+    def test_apple_inherits_from_game_object(_the_snake):
+        assert issubclass(_the_snake.Apple, _the_snake.GameObject), (
+            'Класс `Apple` должен наследоваться от класса `GameObject`.'
+        )
 
 @pytest.mark.parametrize(
     'attr_type, attr_name',
@@ -61,10 +63,11 @@ EXPECTED_SNAKE_ATTRS = (
     ('метод', 'update_direction'),
 )
 
-def test_snake_inherits_from_game_object(_the_snake):
-    assert issubclass(_the_snake.Snake, _the_snake.GameObject), (
-        'Класс `Snake` должен наследоваться от класса `GameObject`.'
-    )
+class GameObject:
+    def test_snake_inherits_from_game_object(_the_snake):
+        assert issubclass(_the_snake.Snake, _the_snake.GameObject), (
+            'Класс `Snake` должен наследоваться от класса `GameObject`.'
+        )
 
 @pytest.mark.parametrize(
     'attr_type, attr_name',
