@@ -2,7 +2,6 @@ import sys
 from random import randint
 import pygame
 
-
 # Константы для размеров поля и сетки:
 SCREEN_WIDTH, SCREEN_HEIGHT = 640, 480
 GRID_SIZE = 20
@@ -23,8 +22,7 @@ SNAKE_COLOR = (0, 255, 0)
 STONE_COLOR = (128, 128, 128)  # Цвет камня.
 
 # Скорость движения змейки:
-SPEED = 5
-
+SPEED = 15
 
 def random_position(excluded_positions):
     """Generate a random position not in the excluded positions."""
@@ -33,7 +31,6 @@ def random_position(excluded_positions):
         if position not in excluded_positions:
             return position
 
-
 class Snake:
     """Змейка."""
 
@@ -41,7 +38,6 @@ class Snake:
         self.positions = [(GRID_WIDTH // 2, GRID_HEIGHT // 2)]
         self.direction = RIGHT
         self.next_direction = None
-        self.last = None
         self.body_color = SNAKE_COLOR
         self.apple_count = 0  # Счётчик съеденных яблок.
 
@@ -55,31 +51,27 @@ class Snake:
         new_head = (head_x + self.direction[0], head_y + self.direction[1])
 
         # Проверка на выход за границы и телепортация.
-        if new_head[0] < 0:
-            new_head = (GRID_WIDTH - 1, new_head[1])
-        elif new_head[0] >= GRID_WIDTH:
-            new_head = (0, new_head[1])
-        if new_head[1] < 0:
-            new_head = (new_head[0], GRID_HEIGHT - 1)
-        elif new_head[1] >= GRID_HEIGHT:
-            new_head = (new_head[0], 0)
+        new_head = (
+            new_head[0] % GRID_WIDTH,
+            new_head[1] % GRID_HEIGHT
+        )
 
         # Проверка на столкновение с телом.
-        if len(self.positions) >= 5 and new_head in self.positions[1:]:
+        if new_head in self.positions[1:]:
             return True  # Столкновение с самим собой.
 
-        self.last = self.positions[-1]
-        self.positions = [new_head] + self.positions[:-1]
+        self.positions.insert(0, new_head)  # Добавляем новую голову
+        self.positions.pop()  # Удаляем хвост
         return False  # Нет столкновения.
 
     def grow(self):
         """Увеличить длину змейки."""
         self.apple_count += 1
-        self.positions.append(self.last)
+        self.positions.append(self.positions[-1])  # Добавляем сегмент в хвост
 
     def draw(self, screen):
         """Отрисовать змейку на экране."""
-        for position in self.positions[:-1]:
+        for position in self.positions:
             rect = pygame.Rect(
                 position[0] * GRID_SIZE,
                 position[1] * GRID_SIZE,
@@ -88,27 +80,6 @@ class Snake:
             )
             pygame.draw.rect(screen, self.body_color, rect)
             pygame.draw.rect(screen, BORDER_COLOR, rect, 1)
-
-        # Отрисовка головы.
-        head_rect = pygame.Rect(
-            self.positions[0][0] * GRID_SIZE,
-            self.positions[0][1] * GRID_SIZE,
-            GRID_SIZE,
-            GRID_SIZE,
-        )
-        pygame.draw.rect(screen, self.body_color, head_rect)
-        pygame.draw.rect(screen, BORDER_COLOR, head_rect, 1)
-
-        # Затирание последнего сегмента.
-        if self.last:
-            last_rect = pygame.Rect(
-                self.last[0] * GRID_SIZE,
-                self.last[1] * GRID_SIZE,
-                GRID_SIZE,
-                GRID_SIZE
-            )
-            pygame.draw.rect(screen, BOARD_BACKGROUND_COLOR, last_rect)
-
 
 class Apple:
     """Яблоко."""
@@ -132,18 +103,12 @@ class Apple:
         pygame.draw.rect(screen, self.body_color, rect)
         pygame.draw.rect(screen, BORDER_COLOR, rect, 1)
 
-
 class Stone:
     """Препятствие (камень)."""
 
     def __init__(self, position):
         self.position = position
         self.body_color = STONE_COLOR
-
-    @staticmethod
-    def random_position(excluded_positions):
-        """Сгенерировать случайное положение для камня."""
-        return random_position(excluded_positions)
 
     def draw(self, screen):
         """Отрисовать камень на экране."""
@@ -156,8 +121,7 @@ class Stone:
         pygame.draw.rect(screen, self.body_color, rect)
         pygame.draw.rect(screen, BORDER_COLOR, rect, 1)
 
-
-def handle_keys(game_object):
+def handle_keys(snake):
     """Обработать нажатия клавиш."""
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -167,15 +131,14 @@ def handle_keys(game_object):
             if event.key == pygame.K_ESCAPE:
                 pygame.quit()
                 sys.exit()
-            if event.key == pygame.K_UP and game_object.direction != DOWN:
-                game_object.next_direction = UP
-            elif event.key == pygame.K_DOWN and game_object.direction != UP:
-                game_object.next_direction = DOWN
-            elif event.key == pygame.K_LEFT and game_object.direction != RIGHT:
-                game_object.next_direction = LEFT
-            elif event.key == pygame.K_RIGHT and game_object.direction != LEFT:
-                game_object.next_direction = RIGHT
-
+            if event.key == pygame.K_UP and snake.direction != DOWN:
+                snake.next_direction = UP
+            elif event.key == pygame.K_DOWN and snake.direction != UP:
+                snake.next_direction = DOWN
+            elif event.key == pygame.K_LEFT and snake.direction != RIGHT:
+                snake.next_direction = LEFT
+            elif event.key == pygame.K_RIGHT and snake.direction != LEFT:
+                snake.next_direction = RIGHT
 
 def main():
     """Основная функция игры."""
@@ -207,12 +170,10 @@ def main():
             )
             # Добавляем проверку на появление камней
             if snake.apple_count % 5 == 0:  # Каждые 5 съеденных яблок
-                stones.append(Stone(new_stone_position))
-                new_stone_position = Stone.random_position(
-                    snake.positions
-                    + [apple.position]
-                    + [stone.position for stone in stones]
+                new_stone_position = random_position(
+                    snake.positions + [apple.position] + [stone.position for stone in stones]
                 )
+                stones.append(Stone(new_stone_position))
 
         # Проверка на столкновение с камнями
         if snake.positions[0] in [stone.position for stone in stones]:
@@ -228,7 +189,6 @@ def main():
         pygame.display.flip()
 
     pygame.quit()  # Завершение игры
-
 
 if __name__ == '__main__':
     main()
