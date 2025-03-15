@@ -1,6 +1,7 @@
 import sys
 from random import randint
 import pygame
+import logging
 
 # Константы для размеров поля и сетки:
 SCREEN_WIDTH, SCREEN_HEIGHT = 640, 480
@@ -24,6 +25,7 @@ STONE_COLOR = (128, 128, 128)  # Цвет камня.
 # Скорость движения змейки:
 SPEED = 15
 
+
 class GameObject:
     """Базовый класс для игровых объектов."""
 
@@ -32,8 +34,8 @@ class GameObject:
         Инициализирует объект GameObject.
 
         Args:
-            position (tuple): Позиция объекта на игровом поле (по умолчанию (0, 0)).
-            body_color (tuple): Цвет объекта в формате RGB (по умолчанию белый).
+            position (tuple): Позиция объекта на игровом поле).
+            body_color (tuple): Цвет объекта в формате RGB.
         """
         self.position = position  # Позиция объекта
         self.body_color = body_color  # Цвет объекта
@@ -205,6 +207,7 @@ def main():
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), 0, 32)
     pygame.display.set_caption('Змейка')
     clock = pygame.time.Clock()
+    logging.basicConfig(level=logging.INFO)
 
     # Создаем экземпляры классов.
     snake = Snake()
@@ -217,7 +220,7 @@ def main():
         handle_keys(snake)
 
         if snake.update():  # Проверяем на столкновение с самим собой.
-            print('Игра окончена! Змея столкнулась сама с собой.')
+            logging.info('Игра окончена! Змея столкнулась сама с собой.')
             break
 
         # Проверка на столкновение со яблоком
@@ -229,13 +232,14 @@ def main():
             # Добавляем проверку на появление камней
             if snake.apple_count % 5 == 0:  # Каждые 5 съеденных яблок
                 new_stone_position = random_position(
-                    snake.positions + [apple.position] + [stone.position for stone in stones]
+                    snake.positions + [apple.position] +
+                    [stone.position for stone in stones]
                 )
                 stones.append(Stone(new_stone_position))
 
         # Проверка на столкновение с камнями
         if snake.positions[0] in [stone.position for stone in stones]:
-            print('Игра окончена! Змея столкнулась с камнем.')
+            logging.info('Игра окончена! Змея столкнулась с камнем.')
             break
 
         # Отрисовка
@@ -247,6 +251,7 @@ def main():
         pygame.display.flip()
 
     pygame.quit()  # Завершение игры
+
 
 if __name__ == '__main__':
     main()
