@@ -11,8 +11,4 @@ def test_main_run_without_exceptions(_the_snake):
     except StopInfiniteLoop:
         pass
     except Exception as error:
-        raise AssertionError(
-            'При запуске функции `main` возникло исключение: '
-            f'`{type(error).__name__}: {error}`\n\n'
-            'Убедитесь, что функция работает корректно.'
-        )
+        raise AssertionError
