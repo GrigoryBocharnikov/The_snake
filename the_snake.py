@@ -24,6 +24,64 @@ STONE_COLOR = (128, 128, 128)  # Цвет камня.
 # Скорость движения змейки:
 SPEED = 15
 
+class GameObject:
+    """Базовый класс для игровых объектов."""
+
+    def __init__(self, position=(0, 0), body_color=(255, 255, 255)):
+        """
+        Инициализирует объект GameObject.
+
+        Args:
+            position (tuple): Позиция объекта на игровом поле (по умолчанию (0, 0)).
+            body_color (tuple): Цвет объекта в формате RGB (по умолчанию белый).
+        """
+        self.position = position  # Позиция объекта
+        self.body_color = body_color  # Цвет объекта
+
+    def draw(self, screen):
+        """Метод для отрисовки объекта на экране.
+        Этот метод должен быть реализован в дочерних классах.
+        """
+        raise NotImplementedError("Метод 'draw' должен быть реализован в дочернем классе.")
+
+    def update(self):
+        """Метод для обновления состояния объекта.
+        Может быть переопределен в дочерних классах.
+        """
+        pass  # Можно оставить пустым, если не требуется обновления
+
+    def set_position(self, position):
+        """Устанавливает новую позицию объекта.
+
+        Args:
+            position (tuple): Новая позиция объекта.
+        """
+        self.position = position
+
+    def get_position(self):
+        """Возвращает текущую позицию объекта.
+
+        Returns:
+            tuple: текущая позиция объекта.
+        """
+        return self.position
+
+    def set_color(self, color):
+        """Устанавливает новый цвет объекта.
+
+        Args:
+            color (tuple): Новый цвет в формате RGB.
+        """
+        self.body_color = color
+
+    def get_color(self):
+        """Возвращает текущий цвет объекта.
+
+        Returns:
+            tuple: текущий цвет объекта.
+        """
+        return self.body_color
+
 def random_position(excluded_positions):
     """Generate a random position not in the excluded positions."""
     while True:
@@ -31,7 +89,7 @@ def random_position(excluded_positions):
         if position not in excluded_positions:
             return position
 
-class Snake:
+class Snake(GameObject):
     """Змейка."""
 
     def __init__(self):
@@ -81,7 +139,7 @@ class Snake:
             pygame.draw.rect(screen, self.body_color, rect)
             pygame.draw.rect(screen, BORDER_COLOR, rect, 1)
 
-class Apple:
+class Apple(GameObject):
     """Яблоко."""
 
     def __init__(self):
@@ -103,7 +161,7 @@ class Apple:
         pygame.draw.rect(screen, self.body_color, rect)
         pygame.draw.rect(screen, BORDER_COLOR, rect, 1)
 
-class Stone:
+class Stone(GameObject):
     """Препятствие (камень)."""
 
     def __init__(self, position):
