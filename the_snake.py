@@ -1,7 +1,8 @@
 import sys
 from random import randint
-import pygame
 import logging
+
+import pygame
 
 # Константы для размеров поля и сетки:
 SCREEN_WIDTH, SCREEN_HEIGHT = 640, 480
@@ -84,12 +85,14 @@ class GameObject:
         """
         return self.body_color
 
+
 def random_position(excluded_positions):
     """Generate a random position not in the excluded positions."""
     while True:
         position = (randint(0, GRID_WIDTH - 1), randint(0, GRID_HEIGHT - 1))
         if position not in excluded_positions:
             return position
+
 
 class Snake(GameObject):
     """Змейка."""
@@ -141,6 +144,7 @@ class Snake(GameObject):
             pygame.draw.rect(screen, self.body_color, rect)
             pygame.draw.rect(screen, BORDER_COLOR, rect, 1)
 
+
 class Apple(GameObject):
     """Яблоко."""
 
@@ -163,6 +167,7 @@ class Apple(GameObject):
         pygame.draw.rect(screen, self.body_color, rect)
         pygame.draw.rect(screen, BORDER_COLOR, rect, 1)
 
+
 class Stone(GameObject):
     """Препятствие (камень)."""
 
@@ -180,6 +185,7 @@ class Stone(GameObject):
         )
         pygame.draw.rect(screen, self.body_color, rect)
         pygame.draw.rect(screen, BORDER_COLOR, rect, 1)
+
 
 def handle_keys(snake):
     """Обработать нажатия клавиш."""
@@ -199,6 +205,7 @@ def handle_keys(snake):
                 snake.next_direction = LEFT
             elif event.key == pygame.K_RIGHT and snake.direction != LEFT:
                 snake.next_direction = RIGHT
+
 
 def main():
     """Основная функция игры."""
