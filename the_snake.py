@@ -45,7 +45,8 @@ class GameObject:
         """Метод для отрисовки объекта на экране.
         Этот метод должен быть реализован в дочерних классах.
         """
-        raise NotImplementedError("Метод 'draw' должен быть реализован в дочернем классе.")
+        raise NotImplementedError(
+            "Метод 'draw' должен быть реализован в дочернем классе.")
 
     def update(self):
         """Метод для обновления состояния объекта.
@@ -239,8 +240,8 @@ def main():
             # Добавляем проверку на появление камней
             if snake.apple_count % 5 == 0:  # Каждые 5 съеденных яблок
                 new_stone_position = random_position(
-                    snake.positions + [apple.position] +
-                    [stone.position for stone in stones]
+                    snake.positions + [apple.position]
+                    + [stone.position for stone in stones]
                 )
                 stones.append(Stone(new_stone_position))
 
