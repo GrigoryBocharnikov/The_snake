@@ -1,6 +1,7 @@
 import sys
 import logging
 from random import randint
+
 import pygame
 
 # Константы для размеров поля и сетки
@@ -36,9 +37,7 @@ class GameObject:
 
     def draw(self, screen):
         """Метод для отрисовки объекта на экране."""
-        raise NotImplementedError(
-            "Метод 'draw' должен быть реализован в дочернем классе."
-        )
+        raise NotImplementedError("Метод 'draw' должен быть реализован в дочернем классе.")
 
     def update(self):
         """Метод для обновления состояния объекта."""
