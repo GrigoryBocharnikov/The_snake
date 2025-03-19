@@ -1,5 +1,5 @@
-import sys
 import os
+import sys
 from multiprocessing import Process
 from pathlib import Path
 from typing import Any
@@ -7,12 +7,12 @@ from pygame.time import Clock
 import pytest
 import pytest_timeout
 
+# Установка пути к основной директории
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 BASE_DIR = Path(__file__).resolve(strict=True).parent.parent
 sys.path.append(str(BASE_DIR))
-from the_snake import main
 
-# Hide the pygame screen
+# Скрыть экран pygame
 os.environ['SDL_VIDEODRIVER'] = 'dummy'
 
 TIMEOUT_ASSERT_MSG = (
@@ -25,12 +25,10 @@ TIMEOUT_ASSERT_MSG = (
     '`tick` объекта `clock`. Не изменяйте прекод в этой части.'
 )
 
-""" Код игры."""
+# Код игры
 def import_the_snake():
     import the_snake  # noqa
 
-
-"""Абракадабра."""
 @pytest.fixture(scope='session')
 def snake_import_test():
     check_import_process = Process(target=import_the_snake)
@@ -41,7 +39,6 @@ def snake_import_test():
         os.kill(pid, 9)
         raise AssertionError(TIMEOUT_ASSERT_MSG)
 
-
 @pytest.fixture(scope='session')
 def _the_snake(snake_import_test):
     try:
@@ -51,16 +48,16 @@ def _the_snake(snake_import_test):
             'При импорте модуль `the_snake` произошла ошибка:\n'
             f'{type(error).__name__}: {error}'
         )
-    for class_name in ('GameObject', 'Snake', 'Apple'):
-        return None
 
+    # Проверка наличия классов
+    for class_name in ('GameObject', 'Snake', 'Apple'):
+        _create_game_object(class_name, the_snake)
 
 def write_timeout_reasons(text, stream=None):
     """Write possible reasons of tests timeout to stream."""
     if stream is None:
         stream = sys.stderr
-    text = TIMEOUT_ASSERT_MSG
-    stream.write(text)
+    stream.write(TIMEOUT_ASSERT_MSG)
 
 pytest_timeout.write = write_timeout_reasons
 
@@ -71,7 +68,7 @@ def _create_game_object(class_name, module):
         raise AssertionError(
             f'При создании объекта класса `{class_name}` произошла ошибка:\n'
             f'`{type(error).__name__}: {error}`\n'
-            f'Если в конструктор класса `{class_name}` помимо параметра '
+            'Если в конструктор класса `{class_name}` помимо параметра '
             '`self` передаются какие-то ещё параметры - убедитесь, что для '
             'них установлены значения по умолчанию. Например:\n'
             '`def __init__(self, <параметр>=<значение_по_умолчанию>):`'

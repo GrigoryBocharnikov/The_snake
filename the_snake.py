@@ -1,17 +1,15 @@
 import sys
-from random import randint
 import logging
-
+from random import randint
 import pygame
 
-# Константы для размеров поля и сетки:
+# Константы для размеров поля и сетки
 SCREEN_WIDTH, SCREEN_HEIGHT = 640, 480
-
 GRID_SIZE = 20
 GRID_WIDTH = SCREEN_WIDTH // GRID_SIZE
 GRID_HEIGHT = SCREEN_HEIGHT // GRID_SIZE
 
-# Направления движения:
+# Направления движения
 UP = (0, -1)
 DOWN = (0, 1)
 LEFT = (-1, 0)
@@ -22,9 +20,9 @@ BOARD_BACKGROUND_COLOR = (0, 0, 0)
 BORDER_COLOR = (93, 216, 228)
 APPLE_COLOR = (255, 0, 0)
 SNAKE_COLOR = (0, 255, 0)
-STONE_COLOR = (128, 128, 128)  # Цвет камня.
+STONE_COLOR = (128, 128, 128)  # Цвет камня
 
-# Скорость движения змейки:
+# Скорость движения змейки
 SPEED = 15
 
 
@@ -39,7 +37,8 @@ class GameObject:
     def draw(self, screen):
         """Метод для отрисовки объекта на экране."""
         raise NotImplementedError(
-            "Метод 'draw' должен быть реализован в дочернем классе.")
+            "Метод 'draw' должен быть реализован в дочернем классе."
+        )
 
     def update(self):
         """Метод для обновления состояния объекта."""
@@ -78,7 +77,7 @@ class Snake(GameObject):
         self.direction = RIGHT
         self.next_direction = None
         self.body_color = SNAKE_COLOR
-        self.apple_count = 0  # Счётчик съеденных яблок.
+        self.apple_count = 0  # Счётчик съеденных яблок
 
     def update(self):
         """Обновить положение змейки."""
@@ -89,19 +88,19 @@ class Snake(GameObject):
         head_x, head_y = self.positions[0]
         new_head = (head_x + self.direction[0], head_y + self.direction[1])
 
-        # Проверка на выход за границы и телепортация.
+        # Проверка на выход за границы и телепортация
         new_head = (
             new_head[0] % GRID_WIDTH,
             new_head[1] % GRID_HEIGHT
         )
 
-        # Проверка на столкновение с телом.
+        # Проверка на столкновение с телом
         if new_head in self.positions[1:]:
-            return True  # Столкновение с самим собой.
+            return True  # Столкновение с самим собой
 
         self.positions.insert(0, new_head)  # Добавляем новую голову
         self.positions.pop()  # Удаляем хвост
-        return False  # Нет столкновения.
+        return False  # Нет столкновения
 
     def grow(self):
         """Увеличить длину змейки."""
@@ -168,7 +167,7 @@ def handle_keys(snake):
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
-            sys.exit()  # Завершение игры.
+            sys.exit()  # Завершение игры
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_ESCAPE:
                 pygame.quit()
@@ -185,17 +184,17 @@ def handle_keys(snake):
 
 def main():
     """Основная функция игры."""
-    # Инициализация PyGame:
+    # Инициализация PyGame
     pygame.init()
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), 0, 32)
     pygame.display.set_caption('Змейка')
     clock = pygame.time.Clock()
     logging.basicConfig(level=logging.INFO)
 
-    # Создаем экземпляры классов.
+    # Создаем экземпляры классов
     snake = Snake()
     apple = Apple()
-    apple.random_position(snake.positions)  # Генерируем позицию яблока.
+    apple.random_position(snake.positions)  # Генерируем позицию яблока
     stones = []
 
     running = True
@@ -204,7 +203,7 @@ def main():
         clock.tick(SPEED)
         handle_keys(snake)
 
-        if snake.update():  # Проверяем на столкновение с самим собой.
+        if snake.update():  # Проверяем на столкновение с самим собой
             logging.info('Игра окончена! Змея столкнулась сама с собой.')
             running = False
 
