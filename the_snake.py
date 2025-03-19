@@ -6,6 +6,7 @@ import pygame
 
 # Константы для размеров поля и сетки:
 SCREEN_WIDTH, SCREEN_HEIGHT = 640, 480
+
 GRID_SIZE = 20
 GRID_WIDTH = SCREEN_WIDTH // GRID_SIZE
 GRID_HEIGHT = SCREEN_HEIGHT // GRID_SIZE
@@ -31,64 +32,38 @@ class GameObject:
     """Базовый класс для игровых объектов."""
 
     def __init__(self, position=(0, 0), body_color=(255, 255, 255)):
-        """
-        Инициализирует объект GameObject.
-
-        Args:
-            position (tuple): Позиция объекта на игровом поле).
-            body_color (tuple): Цвет объекта в формате RGB.
-        """
+        """Инициализирует объект GameObject."""
         self.position = position  # Позиция объекта
         self.body_color = body_color  # Цвет объекта
 
     def draw(self, screen):
-        """Метод для отрисовки объекта на экране.
-        Этот метод должен быть реализован в дочерних классах.
-        """
+        """Метод для отрисовки объекта на экране."""
         raise NotImplementedError(
             "Метод 'draw' должен быть реализован в дочернем классе.")
 
     def update(self):
-        """Метод для обновления состояния объекта.
-        Может быть переопределен в дочерних классах.
-        """
+        """Метод для обновления состояния объекта."""
         pass  # Можно оставить пустым, если не требуется обновления
 
     def set_position(self, position):
-        """Устанавливает новую позицию объекта.
-
-        Args:
-            position (tuple): Новая позиция объекта.
-        """
+        """Устанавливает новую позицию объекта."""
         self.position = position
 
     def get_position(self):
-        """Возвращает текущую позицию объекта.
-
-        Returns:
-            tuple: текущая позиция объекта.
-        """
+        """Возвращает текущую позицию объекта."""
         return self.position
 
     def set_color(self, color):
-        """Устанавливает новый цвет объекта.
-
-        Args:
-            color (tuple): Новый цвет в формате RGB.
-        """
+        """Устанавливает новый цвет объекта."""
         self.body_color = color
 
     def get_color(self):
-        """Возвращает текущий цвет объекта.
-
-        Returns:
-            tuple: текущий цвет объекта.
-        """
+        """Возвращает текущий цвет объекта."""
         return self.body_color
 
 
 def random_position(excluded_positions):
-    """Generate a random position not in the excluded positions."""
+    """Сгенерировать случайную позицию, не входящую в список исключений."""
     while True:
         position = (randint(0, GRID_WIDTH - 1), randint(0, GRID_HEIGHT - 1))
         if position not in excluded_positions:
@@ -223,13 +198,15 @@ def main():
     apple.random_position(snake.positions)  # Генерируем позицию яблока.
     stones = []
 
-    while True:
+    running = True
+
+    while running:
         clock.tick(SPEED)
         handle_keys(snake)
 
         if snake.update():  # Проверяем на столкновение с самим собой.
             logging.info('Игра окончена! Змея столкнулась сама с собой.')
-            break
+            running = False
 
         # Проверка на столкновение со яблоком
         if snake.positions[0] == apple.position:
@@ -261,5 +238,5 @@ def main():
     pygame.quit()  # Завершение игры
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
