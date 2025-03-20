@@ -1,6 +1,9 @@
+# Стандартные библиотеки
 import sys
-from random import randint
 import logging
+from random import randint
+
+# Сторонние библиотеки
 import pygame
 
 # Константы для размеров поля и сетки
@@ -30,27 +33,52 @@ class GameObject:
     """Базовый класс для игровых объектов."""
 
     def __init__(self, position=(0, 0), body_color=(255, 255, 255)):
+        """
+        Инницифлизирует обьект GameObject.
+        Args:
+            position (typle): Позиция обекта на игровом поле).
+            body_color (tuple): Цветобьекта в формате RGB.
+        """
         self.position = position
         self.body_color = body_color
 
     def draw(self, screen):
+        """Метод для отрисовки обьекта на экране.
+        Этот метод должен быть реализован в дочерних классах.
+        """
         raise NotImplementedError(
             "Метод 'draw' должен быть реализован в дочернем классе."
         )
 
     def update(self):
+        """Метод для обновления состояния обьекта.
+        Может быть переопределен в дочерних классах.
+        """
         pass
 
     def set_position(self, position):
+        """Устанавливает новую позицию обьекта.
+        Args:
+            position (tuple): Новая позиция обьекта.
+        """
         self.position = position
 
     def get_position(self):
+        """Возвращает текущию позицию обьекта."""
         return self.position
 
     def set_color(self, color):
+        """Устанавливает новый цвет обьекта.
+        Args:
+            color (tuple): Новый цвет в формате RGB.
+        """
         self.body_color = color
 
     def get_color(self):
+        """Возвращает текущий цвет обьекта.
+        Returns:
+            tuple: Текущий цвет обьекта.
+        """
         return self.body_color
 
 
@@ -73,6 +101,7 @@ class Snake(GameObject):
         self.apple_count = 1
 
     def update(self):
+        """Обновить положение змейки."""
         if self.next_direction:
             self.direction = self.next_direction
             self.next_direction = None
@@ -89,10 +118,12 @@ class Snake(GameObject):
         return False
 
     def grow(self):
+        """Увеличеть длину змейки."""
         self.apple_count += 1
         self.positions.append(self.positions[-1])
 
     def draw(self, screen):
+        """отрисовать змейку на экране."""
         for position in self.positions:
             rect = pygame.Rect(
                 position[0] * GRID_SIZE,
@@ -112,9 +143,11 @@ class Apple(GameObject):
         self.body_color = APPLE_COLOR
 
     def random_position(self, excluded_positions):
+        """Сгенерировать случайное положение для яблока."""
         self.position = generate_random_position(excluded_positions)
 
     def draw(self, screen):
+        """Отрисовать яблоко на экране."""
         rect = pygame.Rect(
             self.position[0] * GRID_SIZE,
             self.position[1] * GRID_SIZE,
@@ -133,6 +166,7 @@ class Stone(GameObject):
         self.body_color = STONE_COLOR
 
     def draw(self, screen):
+        """Отрисовать камень на экране."""
         rect = pygame.Rect(
             self.position[0] * GRID_SIZE,
             self.position[1] * GRID_SIZE,
@@ -144,6 +178,7 @@ class Stone(GameObject):
 
 
 def handle_keys(snake):
+    """Обработать нажатия клавиш."""
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
@@ -163,6 +198,7 @@ def handle_keys(snake):
 
 
 def main():
+    """основная функция игры."""
     pygame.init()
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), 0, 32)
     pygame.display.set_caption('Змейка')
