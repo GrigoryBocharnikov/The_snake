@@ -1,5 +1,6 @@
 import pygame
 import pytest
+from pytest_timeout import timeout
 
 
 EXPECTED_GAME_OBJECT_ATTRS = (
