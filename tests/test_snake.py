@@ -1,5 +1,7 @@
 import pytest
+
 from the_snake import Snake
+
 
 @pytest.fixture
 def snake():

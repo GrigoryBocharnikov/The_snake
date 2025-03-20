@@ -1,6 +1,6 @@
 # Стандартные библиотеки
-import sys
 import logging
+import sys
 from random import randint
 
 # Сторонние библиотеки
