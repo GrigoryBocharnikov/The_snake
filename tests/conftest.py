@@ -3,16 +3,15 @@ import sys
 from multiprocessing import Process
 from pathlib import Path
 from typing import Any
+
 from pygame.time import Clock
 import pytest
 import pytest_timeout
 
-# Установка пути к основной директории
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 BASE_DIR = Path(__file__).resolve(strict=True).parent.parent
 sys.path.append(str(BASE_DIR))
 
-# Скрыть экран pygame
+# Hide the pygame screen
 os.environ['SDL_VIDEODRIVER'] = 'dummy'
 
 TIMEOUT_ASSERT_MSG = (
@@ -25,19 +24,21 @@ TIMEOUT_ASSERT_MSG = (
     '`tick` объекта `clock`. Не изменяйте прекод в этой части.'
 )
 
-# Код игры
+
 def import_the_snake():
     import the_snake  # noqa
+
 
 @pytest.fixture(scope='session')
 def snake_import_test():
     check_import_process = Process(target=import_the_snake)
     check_import_process.start()
     pid = check_import_process.pid
-    check_import_process.join(timeout=3)
+    check_import_process.join(timeout=1)
     if check_import_process.is_alive():
         os.kill(pid, 9)
         raise AssertionError(TIMEOUT_ASSERT_MSG)
+
 
 @pytest.fixture(scope='session')
 def _the_snake(snake_import_test):
@@ -48,18 +49,28 @@ def _the_snake(snake_import_test):
             'При импорте модуль `the_snake` произошла ошибка:\n'
             f'{type(error).__name__}: {error}'
         )
-
-    # Проверка наличия классов
     for class_name in ('GameObject', 'Snake', 'Apple'):
-        _create_game_object(class_name, the_snake)
+        assert hasattr(the_snake, class_name), (
+            f'Убедитесь, что в модуле `the_snake` определен класс `{class_name}`.'
+        )
+    return the_snake
+
 
 def write_timeout_reasons(text, stream=None):
-    """Write possible reasons of tests timeout to stream."""
+    """Write possible reasons of tests timeout to stream.
+
+    The function to replace pytest_timeout traceback output with possible
+    reasons of tests timeout.
+    Appears only when `thread` method is used.
+    """
     if stream is None:
         stream = sys.stderr
-    stream.write(TIMEOUT_ASSERT_MSG)
+    text = TIMEOUT_ASSERT_MSG
+    stream.write(text)
+
 
 pytest_timeout.write = write_timeout_reasons
+
 
 def _create_game_object(class_name, module):
     try:
@@ -68,26 +79,31 @@ def _create_game_object(class_name, module):
         raise AssertionError(
             f'При создании объекта класса `{class_name}` произошла ошибка:\n'
             f'`{type(error).__name__}: {error}`\n'
-            'Если в конструктор класса `{class_name}` помимо параметра '
+            f'Если в конструктор класса `{class_name}` помимо параметра '
             '`self` передаются какие-то ещё параметры - убедитесь, что для '
             'них установлены значения по умолчанию. Например:\n'
             '`def __init__(self, <параметр>=<значение_по_умолчанию>):`'
         )
 
+
 @pytest.fixture
 def game_object(_the_snake):
     return _create_game_object('GameObject', _the_snake)
+
 
 @pytest.fixture
 def snake(_the_snake):
     return _create_game_object('Snake', _the_snake)
 
+
 @pytest.fixture
 def apple(_the_snake):
     return _create_game_object('Apple', _the_snake)
 
+
 class StopInfiniteLoop(Exception):
     pass
+
 
 def loop_breaker_decorator(func):
     call_counter = 0
@@ -101,9 +117,10 @@ def loop_breaker_decorator(func):
         return result
     return wrapper
 
+
 @pytest.fixture
 def modified_clock(_the_snake):
-    class _ModifiedClock:
+    class _Clock:
         def __init__(self, clock_obj: Clock) -> None:
             self.clock = clock_obj
 
@@ -117,7 +134,7 @@ def modified_clock(_the_snake):
             return self.clock.__getattribute__(name)
 
     original_clock = _the_snake.clock
-    modified_clock_obj = _ModifiedClock(original_clock)
+    modified_clock_obj = _Clock(original_clock)
     _the_snake.clock = modified_clock_obj
     yield
     _the_snake.clock = original_clock
