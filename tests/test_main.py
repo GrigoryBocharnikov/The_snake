@@ -7,8 +7,8 @@ from conftest import StopInfiniteLoop
 def test_main_run_without_exceptions(_the_snake):
     try:
         _the_snake.main()
-    except StopInfiniteLoop:
-        pass
+    except Exception as e:
+        pytest.fail(f"Игра завершилась с ошибкой: {str(e)}")
     except Exception as error:
         raise AssertionError(
             'При запуске функции `main` возникло исключение: '

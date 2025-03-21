@@ -1,6 +1,7 @@
 # Стандартные библиотеки
-import logging
 import sys
+
+import logging
 from random import randint
 
 # Сторонние библиотеки
@@ -100,6 +101,23 @@ class Snake(GameObject):
         self.body_color = SNAKE_COLOR
         self.apple_count = 1
 
+    def get_head_position(self):
+        """Взовращает позицию головы змейки."""
+
+    def move(self):
+        """Обновляет позицию головы змейки."""
+        return self.update()
+
+    def reset(self):
+        """Сбрасывает змейку в начальное состояние."""
+        self.positions = [(GRID_WIDTH // 2, GRID_HEIGHT // 2)]
+        self.direction = RIGHT
+        self.next_direction = None
+
+    def update_direction(self, new_direction):
+        """Обновляет направление движения."""
+        self.next_direction = new_direction
+
     def update(self):
         """Обновить положение змейки."""
         if self.next_direction:
@@ -142,7 +160,7 @@ class Apple(GameObject):
         self.position = None
         self.body_color = APPLE_COLOR
 
-    def random_position(self, excluded_positions):
+    def randomize_position(self, excluded_positions):
         """Сгенерировать случайное положение для яблока."""
         self.position = generate_random_position(excluded_positions)
 
@@ -197,9 +215,17 @@ def handle_keys(snake):
                 snake.next_direction = RIGHT
 
 
+# Добавляем в начало файла.
+screen = None
+clock = None
+
+
 def main():
     """основная функция игры."""
+    global screen, clock
     pygame.init()
+    assert isinstance(screen, pygame.Surface)
+    assert isinstance(clock, pygame.time.Clock)
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), 0, 32)
     pygame.display.set_caption('Змейка')
     clock = pygame.time.Clock()
@@ -207,7 +233,7 @@ def main():
 
     snake = Snake()
     apple = Apple()
-    apple.random_position(snake.positions)
+    apple.randomize_position(snake.positions)
     stones = []
 
     while True:
@@ -221,7 +247,7 @@ def main():
         if snake.positions[0] == apple.position:
             snake.grow()
             excluded = snake.positions + [stone.position for stone in stones]
-            apple.random_position(excluded)
+            apple.randomize_position(excluded)
 
             if snake.apple_count % 5 == 0:
                 new_stone_position = generate_random_position(
