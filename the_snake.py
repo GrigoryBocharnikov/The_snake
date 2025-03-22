@@ -143,9 +143,7 @@ class Snake(GameObject):
         """отрисовать змейку на экране."""
         for position in self.positions:
             rect = pygame.Rect(
-                position[0] * GRID_SIZE,
-                position[1] * GRID_SIZE,
-                GRID_SIZE, GRID_SIZE
+                position[0] * GRID_SIZE, position[1] * GRID_SIZE, GRID_SIZE, GRID_SIZE
             )
             pygame.draw.rect(screen, self.body_color, rect)
             pygame.draw.rect(screen, BORDER_COLOR, rect, 1)
