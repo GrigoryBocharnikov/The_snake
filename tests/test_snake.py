@@ -7,8 +7,10 @@ from the_snake import Snake
 def snake():
     return Snake()
 
+
 def test_snake_initial_position(snake):
-    assert snake.positions == [(GRID_WIDTH//2, GRID_HEIGHT//2)]
+    assert snake.positions == [(GRID_WIDTH // 2, GRID_HEIGHT // 2)]
+
 
 def test_snake_movement():
     snake = Snake()
