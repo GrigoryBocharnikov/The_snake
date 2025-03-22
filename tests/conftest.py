@@ -1,12 +1,13 @@
 import os
 import sys
 from multiprocessing import Process
-from pathlib import Path
 from typing import Any
-
 import pytest
-import pytest_timeout
+from pathlib import Path
+
+import pytest_timeout  # type: ignore
 from pygame.time import Clock
+
 
 BASE_DIR = Path(__file__).resolve(strict=True).parent.parent
 sys.path.append(str(BASE_DIR))
@@ -51,7 +52,7 @@ def _the_snake(snake_import_test):
         )
     for class_name in ('GameObject', 'Snake', 'Apple'):
         assert hasattr(the_snake, class_name), (
-            f'Убедитесь, что в модуле `the_snake` определен класс `{class_name}`.'
+            f'Убедитесь, что модуле `the_snake` определен клас `{class_name}`.'
         )
     return the_snake
 

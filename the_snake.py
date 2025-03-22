@@ -1,7 +1,6 @@
 # Стандартные библиотеки
-import sys
-
 import logging
+import sys
 from random import randint
 
 # Сторонние библиотеки
@@ -103,6 +102,7 @@ class Snake(GameObject):
 
     def get_head_position(self):
         """Взовращает позицию головы змейки."""
+        return self.positions[0]
 
     def move(self):
         """Обновляет позицию головы змейки."""
@@ -112,7 +112,6 @@ class Snake(GameObject):
         """Сбрасывает змейку в начальное состояние."""
         self.positions = [(GRID_WIDTH // 2, GRID_HEIGHT // 2)]
         self.direction = RIGHT
-        self.next_direction = None
 
     def update_direction(self, new_direction):
         """Обновляет направление движения."""
@@ -146,8 +145,7 @@ class Snake(GameObject):
             rect = pygame.Rect(
                 position[0] * GRID_SIZE,
                 position[1] * GRID_SIZE,
-                GRID_SIZE,
-                GRID_SIZE
+                GRID_SIZE, GRID_SIZE
             )
             pygame.draw.rect(screen, self.body_color, rect)
             pygame.draw.rect(screen, BORDER_COLOR, rect, 1)
@@ -215,19 +213,12 @@ def handle_keys(snake):
                 snake.next_direction = RIGHT
 
 
-# Добавляем в начало файла.
-screen = None
-clock = None
-
-
 def main():
     """основная функция игры."""
     global screen, clock
     pygame.init()
-    assert isinstance(screen, pygame.Surface)
-    assert isinstance(clock, pygame.time.Clock)
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), 0, 32)
-    pygame.display.set_caption('Змейка')
+    pygame.display.set_caption("Змейка")
     clock = pygame.time.Clock()
     logging.basicConfig(level=logging.INFO)
 
@@ -241,7 +232,7 @@ def main():
         handle_keys(snake)
 
         if snake.update():
-            logging.error('Игра окончена! Змея столкнулась сама с собой.')
+            logging.error("Игра окончена! Змея столкнулась сама с собой.")
             break
 
         if snake.positions[0] == apple.position:
@@ -256,7 +247,7 @@ def main():
                 stones.append(Stone(new_stone_position))
 
         if snake.positions[0] in [stone.position for stone in stones]:
-            logging.error('Игра окончена! Змея столкнулась с камнем.')
+            logging.error("Игра окончена! Змея столкнулась с камнем.")
             break
 
         screen.fill(BOARD_BACKGROUND_COLOR)
@@ -269,5 +260,5 @@ def main():
     pygame.quit()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
