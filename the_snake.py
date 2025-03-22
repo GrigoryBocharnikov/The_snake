@@ -143,7 +143,10 @@ class Snake(GameObject):
         """отрисовать змейку на экране."""
         for position in self.positions:
             rect = pygame.Rect(
-                position[0] * GRID_SIZE, position[1] * GRID_SIZE, GRID_SIZE, GRID_SIZE
+                position[0] * GRID_SIZE,
+                position[1] * GRID_SIZE,
+                GRID_SIZE,
+                GRID_SIZE
             )
             pygame.draw.rect(screen, self.body_color, rect)
             pygame.draw.rect(screen, BORDER_COLOR, rect, 1)
@@ -216,7 +219,7 @@ def main():
     global screen, clock
     pygame.init()
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), 0, 32)
-    pygame.display.set_caption("Змейка")
+    pygame.display.set_caption('Змейка')
     clock = pygame.time.Clock()
     logging.basicConfig(level=logging.INFO)
 
@@ -230,7 +233,7 @@ def main():
         handle_keys(snake)
 
         if snake.update():
-            logging.error("Игра окончена! Змея столкнулась сама с собой.")
+            logging.error('Игра окончена! Змея столкнулась сама с собой.')
             break
 
         if snake.positions[0] == apple.position:
@@ -245,7 +248,7 @@ def main():
                 stones.append(Stone(new_stone_position))
 
         if snake.positions[0] in [stone.position for stone in stones]:
-            logging.error("Игра окончена! Змея столкнулась с камнем.")
+            logging.error('Игра окончена! Змея столкнулась с камнем.')
             break
 
         screen.fill(BOARD_BACKGROUND_COLOR)
@@ -258,5 +261,5 @@ def main():
     pygame.quit()
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()
