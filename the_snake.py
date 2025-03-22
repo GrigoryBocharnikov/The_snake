@@ -28,6 +28,11 @@ STONE_COLOR = (128, 128, 128)
 # Скорость движения змейки
 SPEED = 15
 
+# Инициализация Pygame
+pygame.init()
+screen: pygame.Surface = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+clock: pygame.time.Clock = pygame.time.Clock()
+
 
 class GameObject:
     """Базовый класс для игровых объектов."""
@@ -94,7 +99,8 @@ class Snake(GameObject):
     """Класс змейки."""
 
     def __init__(self):
-        self.positions = [(GRID_WIDTH // 2, GRID_HEIGHT // 2)]
+        super().__init__(positions = (GRID_WIDTH // 2, GRID_HEIGHT // 2))
+        self.position = [self.position]
         self.direction = RIGHT
         self.next_direction = None
         self.body_color = SNAKE_COLOR
@@ -218,9 +224,9 @@ def main():
     """основная функция игры."""
     global screen, clock
     pygame.init()
-    screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), 0, 32)
+    screen: pygame.Surface = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
     pygame.display.set_caption('Змейка')
-    clock = pygame.time.Clock()
+    clock: pygame.time.Clock = pygame.time.Clock()
     logging.basicConfig(level=logging.INFO)
 
     snake = Snake()
@@ -228,9 +234,11 @@ def main():
     apple.randomize_position(snake.positions)
     stones = []
 
-    while True:
-        clock.tick(SPEED)
-        handle_keys(snake)
+    running = True
+    while running:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
 
         if snake.update():
             logging.error('Игра окончена! Змея столкнулась сама с собой.')
