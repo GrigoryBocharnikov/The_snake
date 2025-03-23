@@ -1,13 +1,11 @@
 import pygame
 import pytest
-from pytest_timeout import timeout
 
 EXPECTED_GAME_OBJECT_ATTRS = (
     ("атрибут", "position"),
     ("атрибут", "body_color"),
     ("метод", "draw"),
 )
-
 
 @pytest.mark.parametrize(
     "attr_type, attr_name",
