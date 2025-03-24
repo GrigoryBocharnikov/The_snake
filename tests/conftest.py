@@ -4,7 +4,6 @@ from multiprocessing import Process
 from pathlib import Path
 from typing import Any
 
-import pytest
 import pytest_timeout  # type: ignore
 from pygame.time import Clock
 
@@ -29,7 +28,6 @@ def import_the_snake():
     import the_snake  # noqa
 
 
-@pytest.fixture(scope="session")
 def snake_import_test():
     check_import_process = Process(target=import_the_snake)
     check_import_process.start()
@@ -40,7 +38,6 @@ def snake_import_test():
         raise AssertionError(TIMEOUT_ASSERT_MSG)
 
 
-@pytest.fixture(scope="session")
 def _the_snake(snake_import_test):
     try:
         import the_snake
@@ -86,17 +83,14 @@ def _create_game_object(class_name, module):
         )
 
 
-@pytest.fixture
 def game_object(_the_snake):
     return _create_game_object("GameObject", _the_snake)
 
 
-@pytest.fixture
 def snake(_the_snake):
     return _create_game_object("Snake", _the_snake)
 
 
-@pytest.fixture
 def apple(_the_snake):
     return _create_game_object("Apple", _the_snake)
 
@@ -119,23 +113,22 @@ def loop_breaker_decorator(func):
     return wrapper
 
 
-@pytest.fixture
 def modified_clock(_the_snake):
-    class _Clock:
-        def __init__(self, clock_obj: Clock) -> None:
-            self.clock = clock_obj
 
-        @loop_breaker_decorator
-        def tick(self, *args, **kwargs):
-            return self.clock.tick(*args, **kwargs)
+class _Clock:
+    def __init__(self, clock_obj: Clock) -> None:
+        self.clock = clock_obj
 
-        def __getattribute__(self, name: str) -> Any:
-            if name in ["tick", "clock"]:
-                return super().__getattribute__(name)
-            return self.clock.__getattribute__(name)
+    @loop_breaker_decorator
+    def tick(self, *args, **kwargs):
+        return self.clock.tick(*args, **kwargs)
+
+    def __getattribute__(self, name: str) -> Any:
+        if name in ["tick", "clock"]:
+            return super().__getattribute__(name)
+        return self.clock.__getattribute__(name)
 
     original_clock = _the_snake.clock
-    modified_clock_obj = _Clock(original_clock)
+    modified_clock_obj = Clock(original_clock)
     _the_snake.clock = modified_clock_obj
-    yield
     _the_snake.clock = original_clock
