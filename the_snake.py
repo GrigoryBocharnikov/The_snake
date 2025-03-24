@@ -1,6 +1,8 @@
-import pygame
 import random
 import sys
+
+import pygame
+
 
 SCREEN_WIDTH = 640
 SCREEN_HEIGHT = 480
@@ -21,7 +23,7 @@ class GameObject:
 
     def draw(self, surface):
         """Отрисовывает объект на поверхности (должен быть переопределен)."""
-        raise NotImplementedError("Метод draw должен быть переопределен")
+        raise NotImplementedError('Метод draw должен быть переопределен')
 
 
 class Apple(GameObject):
@@ -37,8 +39,10 @@ class Apple(GameObject):
 
     def randomize_position(self):
         """Устанавливает случайную позицию яблока в пределах экрана."""
-        x = random.randint(0, self.screen_width // self.grid_size - 1) * self.grid_size
-        y = random.randint(0, self.screen_height // self.grid_size - 1) * self.grid_size
+        x = (random.randint(0, self.screen_width // self.grid_size - 1)
+             * self.grid_size)
+        y = (random.randint(0, self.screen_height // self.grid_size - 1)
+             * self.grid_size)
         self.position = (x, y)
 
     def draw(self, surface):
@@ -109,7 +113,8 @@ class Snake(GameObject):
 
         if new_dir is not None:
             current_dir = self.direction
-            if (new_dir[0] != -current_dir[0] or new_dir[1] != -current_dir[1]):
+            if (new_dir[0] != -current_dir[0]
+                    or new_dir[1] != -current_dir[1]):
                 self.direction = new_dir
 
 
@@ -118,7 +123,7 @@ def main():
     pygame.init()
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
     clock = pygame.time.Clock()
-    pygame.display.set_caption("Snake Game")
+    pygame.display.set_caption('Snake Game')
 
     snake = Snake(SCREEN_WIDTH, SCREEN_HEIGHT, GRID_SIZE)
     apple = Apple(SCREEN_WIDTH, SCREEN_HEIGHT, GRID_SIZE)
@@ -147,5 +152,5 @@ def main():
         clock.tick(SPEED)
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()
