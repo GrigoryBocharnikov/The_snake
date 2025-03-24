@@ -1,8 +1,6 @@
-import random
 import sys
-
+import random
 import pygame
-
 
 SCREEN_WIDTH = 640
 SCREEN_HEIGHT = 480
@@ -22,8 +20,8 @@ class GameObject:
         self.position = position
 
     def draw(self, surface):
-        """Отрисовывает объект на поверхности (должен быть переопределен)."""
-        raise NotImplementedError('Метод draw должен быть переопределен')
+        """Отрисовывает объект на поверхности."""
+        raise NotImplementedError('Метод draw должен быть переопределен.')
 
 
 class Apple(GameObject):
@@ -38,7 +36,7 @@ class Apple(GameObject):
         self.randomize_position()
 
     def randomize_position(self):
-        """Устанавливает случайную позицию яблока в пределах экрана."""
+        """Устанавливает случайную позицию яблока."""
         x = (random.randint(0, self.screen_width // self.grid_size - 1)
              * self.grid_size)
         y = (random.randint(0, self.screen_height // self.grid_size - 1)
@@ -56,8 +54,8 @@ class Snake(GameObject):
 
     def __init__(self, screen_width, screen_height, grid_size):
         """Инициализирует змейку в центре экрана."""
-        center_x = (screen_width // 2) // grid_size * grid_size
-        center_y = (screen_height // 2) // grid_size * grid_size
+        center_x = ((screen_width // 2) // grid_size) * grid_size
+        center_y = ((screen_height // 2) // grid_size) * grid_size
         super().__init__((center_x, center_y))
         self.screen_width = screen_width
         self.screen_height = screen_height
@@ -81,7 +79,7 @@ class Snake(GameObject):
         return self.positions[0]
 
     def move(self):
-        """Обновляет позицию змейки в соответствии с направлением движения."""
+        """Обновляет позицию змейки."""
         current_head = self.get_head_position()
         dx, dy = self.direction
         new_x = (current_head[0] + dx * self.grid_size) % self.screen_width
@@ -100,7 +98,7 @@ class Snake(GameObject):
             pygame.draw.rect(surface, SNAKE_COLOR, rect)
 
     def handle_input(self, key):
-        """Обрабатывает ввод пользователя для изменения направления."""
+        """Обрабатывает ввод пользователя."""
         new_dir = None
         if key == pygame.K_UP:
             new_dir = (0, -1)
