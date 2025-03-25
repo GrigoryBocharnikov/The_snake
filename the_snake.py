@@ -1,6 +1,5 @@
-import random
 import sys
-
+import random
 import pygame
 
 SCREEN_WIDTH = 640
@@ -19,6 +18,10 @@ DOWN = pygame.K_DOWN
 LEFT = pygame.K_LEFT
 RIGHT = pygame.K_RIGHT
 
+pygame.init()
+screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+clock = pygame.time.Clock()
+
 
 class GameObject:
     """Базовый класс для игровых объектов."""
@@ -36,7 +39,12 @@ class GameObject:
 class Apple(GameObject):
     """Класс для яблока, которое может съесть змейка."""
 
-    def __init__(self, screen_width=640, screen_height=480, grid_size=20):
+    def __init__(
+        self,
+        screen_width=SCREEN_WIDTH,
+        screen_height=SCREEN_HEIGHT,
+        grid_size=GRID_SIZE
+    ):
         """Инициализирует яблоко со случайной позицией."""
         super().__init__(body_color=APPLE_COLOR)
         self.screen_width = screen_width
@@ -61,7 +69,12 @@ class Apple(GameObject):
 class Snake(GameObject):
     """Класс для змейки, управляемой игроком."""
 
-    def __init__(self, screen_width=640, screen_height=480, grid_size=20):
+    def __init__(
+        self,
+        screen_width=SCREEN_WIDTH,
+        screen_height=SCREEN_HEIGHT,
+        grid_size=GRID_SIZE
+    ):
         """Инициализирует змейку в центре экрана."""
         center_x = ((screen_width // 2) // grid_size) * grid_size
         center_y = ((screen_height // 2) // grid_size) * grid_size
@@ -134,12 +147,9 @@ def handle_keys(snake):
             snake.update_direction(event.key)
 
 
-screen: pygame.Surface
-clock: pygame.time.Clock
-
-
 def main():
     """Основная функция, запускающая игру."""
+    global screen, clock
     pygame.init()
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
     clock = pygame.time.Clock()
@@ -147,6 +157,9 @@ def main():
 
     snake = Snake(SCREEN_WIDTH, SCREEN_HEIGHT, GRID_SIZE)
     apple = Apple(SCREEN_WIDTH, SCREEN_HEIGHT, GRID_SIZE)
+
+    snake = Snake()
+    apple = Apple()
 
     while True:
         handle_keys(snake)
