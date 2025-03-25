@@ -1,5 +1,6 @@
-import sys
 import random
+import sys
+
 import pygame
 
 SCREEN_WIDTH = 640
@@ -27,7 +28,7 @@ class GameObject:
 class Apple(GameObject):
     """Класс для яблока, которое может съесть змейка."""
 
-    def __init__(self, screen_width, screen_height, grid_size):
+    def __init__(self, screen_width=640, screen_height=480, grid_size=20):
         """Инициализирует яблоко со случайной позицией."""
         super().__init__()
         self.screen_width = screen_width
@@ -52,7 +53,7 @@ class Apple(GameObject):
 class Snake(GameObject):
     """Класс для змейки, управляемой игроком."""
 
-    def __init__(self, screen_width, screen_height, grid_size):
+    def __init__(self, screen_width=640, screen_height=480, grid_size=20):
         """Инициализирует змейку в центре экрана."""
         center_x = ((screen_width // 2) // grid_size) * grid_size
         center_y = ((screen_height // 2) // grid_size) * grid_size
