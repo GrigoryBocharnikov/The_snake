@@ -146,9 +146,10 @@ def handle_keys(snake):
             sys.exit()
         if event.type == pygame.KEYDOWN:
             snake.update_direction(event.key)
+    return True
 
 
-def main():
+def main(test_mode=False):
     """Основная функция, запускающая игру."""
     global screen, clock
     pygame.init()
@@ -162,8 +163,11 @@ def main():
     snake = Snake()
     apple = Apple()
 
-    while True:
-        handle_keys(snake)
+    running = True
+    frame_count = 0
+
+    while running:
+        running = handle_keys(snake)
         snake.move()
 
         if snake.get_head_position() == apple.position:
@@ -175,6 +179,12 @@ def main():
         apple.draw(screen)
         pygame.display.flip()
         clock.tick(SPEED)
+
+        # В тестовом режиме завершаем игру после 10 кадров
+        if test_mode:
+            frame_count += 1
+            if frame_count >= 10:
+                running = False
 
 
 if __name__ == '__main__':
