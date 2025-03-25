@@ -143,7 +143,6 @@ def main():
         if snake.get_head_position() in snake.positions[1:]:
             snake.reset()
 
-        
         screen.fill(BOARD_BACKGROUND_COLOR)
         snake.draw(screen)
         apple.draw(screen)
