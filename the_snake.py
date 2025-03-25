@@ -1,5 +1,6 @@
-import sys
 import random
+import sys
+
 import pygame
 
 SCREEN_WIDTH = 640
