@@ -134,6 +134,10 @@ def handle_keys(snake):
             snake.update_direction(event.key)
 
 
+screen: pygame.Surface
+clock: pygame.time.Clock
+
+
 def main():
     """Основная функция, запускающая игру."""
     pygame.init()
