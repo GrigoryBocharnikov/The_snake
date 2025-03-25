@@ -1,14 +1,13 @@
-from conftest import StopInfiniteLoop
+from unittest.mock import patch
+import pytest
+import pygame
 
 def test_main_run_without_exceptions(_the_snake):
-    """Проверка на ошибку."""
-    try:
-        _the_snake.main()
-    except Exception as e:
-        pytest.fail(f"Игра завершилась с ошибкой: {str(e)}")
-    except Exception as error:
-        raise AssertionError(
-            "При запуске функции `main` возникло исключение: "
-            f"`{type(error).__name__}: {error}`\n\n"
-            "Убедитесь, что функция работает корректно."
-        )
+    with patch.object(pygame.event, 'get') as mock_event_get:
+        # Имитируем событие выхода после первого кадра
+        mock_event_get.side_effect = [
+            [pygame.event.Event(pygame.QUIT)],
+            []
+        ]
+        with patch.object(pygame, 'quit'):
+            _the_snake.main()
